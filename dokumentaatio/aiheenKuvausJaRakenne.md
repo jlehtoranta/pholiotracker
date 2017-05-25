@@ -15,3 +15,6 @@ Ohjelma on suunniteltu pääasiassa piensijoittajille.
 * Osakkeiden poistaminen salkusta
 * Salkun kokonaisarvon kehityksen tarkastelu
 
+## Luokkakaavio
+![pholiotracker luokkakaavio](luokkakaavio/pholiotracker_class_diagram.png)
+
