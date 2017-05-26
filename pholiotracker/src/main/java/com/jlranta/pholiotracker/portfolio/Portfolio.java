@@ -18,6 +18,23 @@ public class Portfolio {
         this.apiHandler = apiHandler;
     }
     
+    @Override
+    public String toString() {
+        return this.name;
+    }
+    
+    public void setSecurities(TreeMap<String, Security> secs) {
+        this.securities = secs;
+    }
+    
+    public void setCash(Double c) {
+        this.cash = c;
+    }
+    
+    public Double getCash() {
+        return this.cash;
+    }
+    
     public TreeMap<String, Security> getSecurities() {
         return this.securities;
     }
