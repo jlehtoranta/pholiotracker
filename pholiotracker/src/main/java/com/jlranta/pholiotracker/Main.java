@@ -1,10 +1,10 @@
 package com.jlranta.pholiotracker;
 
-import com.jlranta.pholiotracker.api.StockApiHandler;
-import com.jlranta.pholiotracker.api.StockApi;
-
 import java.util.ArrayList;
 import java.util.TreeMap;
+
+import com.jlranta.pholiotracker.api.StockApiHandler;
+import com.jlranta.pholiotracker.api.StockApi;
 
 
 public class Main {
