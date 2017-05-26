@@ -13,7 +13,7 @@ public class StockApiHandler {
     public TreeMap<StockApi, ArrayList<String>> searchAll(String s) {
         TreeMap<StockApi, ArrayList<String>> foundFromApis = new TreeMap<>();
         
-        for(StockApi api : this.stockApis) {
+        for (StockApi api : this.stockApis) {
             ArrayList<String> found = api.search(s);
             if (!found.isEmpty()) {
                 foundFromApis.put(api, found);

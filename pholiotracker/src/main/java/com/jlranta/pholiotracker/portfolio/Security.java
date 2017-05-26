@@ -53,7 +53,7 @@ public class Security {
     public void updateMeanBuyPrice() {
         Double price = 0.0;
         
-        for(SimpleEntry<Double, Integer> t : this.buyData) {
+        for (SimpleEntry<Double, Integer> t : this.buyData) {
             price += t.getKey() * t.getValue();
         }
         
@@ -89,7 +89,7 @@ public class Security {
         if (this.amount >= a) {
             this.amount -= a;
             
-            for(SimpleEntry<Double, Integer> t : this.buyData) {
+            for (SimpleEntry<Double, Integer> t : this.buyData) {
                 if (a >= t.getValue()) {
                     a -= t.getValue();
                     this.buyData.pop();
