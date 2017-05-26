@@ -27,6 +27,14 @@ public class Security {
         return this.name;
     }
     
+    public ArrayDeque<SimpleEntry<Double, Integer>> getBuyData() {
+        return this.buyData;
+    }
+    
+    public void setBuyData(ArrayDeque<SimpleEntry<Double, Integer>> bd) {
+        this.buyData = bd;
+    }
+    
     public TreeMap<String, Double> getValues() {
         return this.valueData;
     }
@@ -46,7 +54,7 @@ public class Security {
         Double price = 0.0;
         
         for(SimpleEntry<Double, Integer> t : this.buyData) {
-            price += t.getKey();
+            price += t.getKey() * t.getValue();
         }
         
         this.meanBuyPrice = price / this.amount.doubleValue();
