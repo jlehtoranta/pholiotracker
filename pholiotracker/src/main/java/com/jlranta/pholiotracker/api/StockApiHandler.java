@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class StockApiHandler {
-    private ArrayList<StockApi> stockApis;
+    private ArrayList<StockApi> stockApis = new ArrayList<>();
     
     public StockApiHandler() {
         this.initializeApis();
