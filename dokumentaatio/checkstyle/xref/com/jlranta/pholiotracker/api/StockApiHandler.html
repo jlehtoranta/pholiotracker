@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.jlranta.pholiotracker.api;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> java.util.TreeMap;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> java.util.LinkedHashMap;
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../com/jlranta/pholiotracker/api/StockApiHandler.html">StockApiHandler</a> {
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>       <strong class="jxr_keyword">private</strong> ArrayList&lt;StockApi&gt; stockApis = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
@@ -18,8 +18,8 @@
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>          <strong class="jxr_keyword">this</strong>.initializeApis();
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>      }
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">public</strong> TreeMap&lt;StockApi, ArrayList&lt;String&gt;&gt; searchAll(String s) {
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>          TreeMap&lt;StockApi, ArrayList&lt;String&gt;&gt; foundFromApis = <strong class="jxr_keyword">new</strong> TreeMap&lt;&gt;();
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">public</strong> LinkedHashMap&lt;StockApi, ArrayList&lt;String&gt;&gt; searchAll(String s) {
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>          LinkedHashMap&lt;StockApi, ArrayList&lt;String&gt;&gt; foundFromApis = <strong class="jxr_keyword">new</strong> LinkedHashMap&lt;&gt;();
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>          
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>          <strong class="jxr_keyword">for</strong> (StockApi api : <strong class="jxr_keyword">this</strong>.stockApis) {
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>              ArrayList&lt;String&gt; found = api.search(s);
