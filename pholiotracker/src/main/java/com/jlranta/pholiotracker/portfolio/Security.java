@@ -1,6 +1,6 @@
 package com.jlranta.pholiotracker.portfolio;
 
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayDeque;
 
@@ -13,7 +13,7 @@ public class Security {
     private Integer amount;
     private Double meanBuyPrice;
     private ArrayDeque<SimpleEntry<Double, Integer>> buyData = new ArrayDeque<>();
-    private TreeMap<String, Double> valueData = new TreeMap<>();
+    private LinkedHashMap<String, Double> valueData = new LinkedHashMap<>();
     
     public Security(String name, StockApi api) {
         this.amount = 0;
@@ -35,12 +35,12 @@ public class Security {
         this.buyData = bd;
     }
     
-    public TreeMap<String, Double> getValues() {
+    public LinkedHashMap<String, Double> getValues() {
         return this.valueData;
     }
     
     public boolean updateValues() {
-        TreeMap<String, Double> newData = this.api.getData(this.name);
+        LinkedHashMap<String, Double> newData = this.api.getData(this.name);
         
         if (!newData.equals(this.valueData)) {
             this.valueData = newData;

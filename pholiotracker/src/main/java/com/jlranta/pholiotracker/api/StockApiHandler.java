@@ -1,7 +1,7 @@
 package com.jlranta.pholiotracker.api;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 public class StockApiHandler {
     private ArrayList<StockApi> stockApis = new ArrayList<>();
@@ -10,8 +10,8 @@ public class StockApiHandler {
         this.initializeApis();
     }
     
-    public TreeMap<StockApi, ArrayList<String>> searchAll(String s) {
-        TreeMap<StockApi, ArrayList<String>> foundFromApis = new TreeMap<>();
+    public LinkedHashMap<StockApi, ArrayList<String>> searchAll(String s) {
+        LinkedHashMap<StockApi, ArrayList<String>> foundFromApis = new LinkedHashMap<>();
         
         for (StockApi api : this.stockApis) {
             ArrayList<String> found = api.search(s);
