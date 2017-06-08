@@ -10,6 +10,6 @@ The most important parts of the documentation are:
 * [The project time tracking](dokumentaatio/tuntikirjanpito.md)
 
 # Reports
-* [PIT](https://htmlpreview.github.io/?https://github.com/jlehtoranta/pholiotracker/blob/master/dokumentaatio/pit/201706020227/index.html)
+* [PIT](https://htmlpreview.github.io/?https://github.com/jlehtoranta/pholiotracker/blob/master/dokumentaatio/pit/201706090000/index.html)
 * [Checkstyle](https://htmlpreview.github.io/?https://github.com/jlehtoranta/pholiotracker/blob/master/dokumentaatio/checkstyle/checkstyle.html)
 
