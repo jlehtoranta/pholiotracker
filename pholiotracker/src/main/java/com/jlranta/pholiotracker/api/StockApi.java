@@ -7,8 +7,8 @@ import java.util.LinkedHashMap;
 public interface StockApi {
     
     @Override
-    public String toString();
+    String toString();
     
-    public ArrayList<String> search(String s);
-    public LinkedHashMap<String, Double> getData(String s);
+    ArrayList<String> search(String s);
+    LinkedHashMap<String, Double> getData(String s);
 }
