@@ -9,15 +9,28 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+/**
+ * RestApiQuery class is a helper class for placing HTTP queries to the stock
+ * APIs. It uses org.apache.http.* for querying.
+ * @author Jarkko Lehtoranta <devel@jlranta.com>
+ */
 public class RestApiQuery {
     private String apiName = "";
     private CloseableHttpClient cli;
     
+    /**
+     * @param apiName The display name of the API, where the queries come from
+     */
     public RestApiQuery(String apiName) {
         this.apiName = apiName;
         this.cli = HttpClients.createDefault();
     }
     
+    /**
+     * A simple methods that handles the generic HTTP GET requests
+     * @param url The URL for the HTTP GET request
+     * @return The body of the HTTP response as a string
+     */
     public String apiRequest(String url) {
         String body = "";
         
