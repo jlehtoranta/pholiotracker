@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2017</copyright>
     <item>
-      <title>File: 9,
+      <title>File: 10,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -102,7 +102,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="${project.url}/checkstyle.html#com.jlranta.pholiotracker.Main.java">com/jlranta/pholiotracker/Main.java</a>
+                  <a href="${project.url}/checkstyle.html#com.jlranta.pholiotracker.PholioGui.java">com/jlranta/pholiotracker/PholioGui.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.jlranta.pholiotracker.PholioTracker.java">com/jlranta/pholiotracker/PholioTracker.java</a>
                 </td>
                 <td>
                   0
