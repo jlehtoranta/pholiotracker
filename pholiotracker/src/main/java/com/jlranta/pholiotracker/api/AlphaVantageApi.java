@@ -6,7 +6,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import com.google.gson.stream.JsonReader;
 
-
+/**
+ * This class implements the Alpha Vantage stock API. Have a look at the
+ * in depth documentation of the methods in the StockApi interface.
+ * @author Jarkko Lehtoranta <devel@jlranta.com>
+ */
 public class AlphaVantageApi implements StockApi {
     private final String apiName = "Alpha Vantage";
     private final String apiKey = "90A8";
