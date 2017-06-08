@@ -6,7 +6,12 @@ import java.util.ArrayDeque;
 
 import com.jlranta.pholiotracker.api.StockApi;
 
-
+/**
+ * This class represents a single security. The object tracks the user's buy
+ * and sell history for the security. It also keeps track of the historical
+ * price information for the security.
+ * @author Jarkko Lehtoranta <devel@jlranta.com>
+ */
 public class Security {
     private String name;
     private StockApi api;
@@ -15,6 +20,11 @@ public class Security {
     private ArrayDeque<SimpleEntry<Double, Integer>> buyData = new ArrayDeque<>();
     private LinkedHashMap<String, Double> valueData = new LinkedHashMap<>();
     
+    /**
+     * Creates a new security
+     * @param name  The stock symbol of the security as a string
+     * @param api   The stock API, where the security gets its price data
+     */
     public Security(String name, StockApi api) {
         this.amount = 0;
         this.meanBuyPrice = 0.0;
@@ -39,6 +49,11 @@ public class Security {
         return this.valueData;
     }
     
+    /**
+     * Updates the price data
+     * @return  <code>true</code>, if the update succeeds. Otherwise return
+     *          <code>false</code>.
+     */
     public boolean updateValues() {
         LinkedHashMap<String, Double> newData = this.api.getData(this.name);
         
@@ -50,6 +65,9 @@ public class Security {
         return false;
     }
     
+    /**
+     * Updates the mean buy price for the security
+     */
     public void updateMeanBuyPrice() {
         Double price = 0.0;
         
@@ -76,6 +94,13 @@ public class Security {
         this.amount = a;
     }
     
+    /**
+     * Buy more securities
+     * @param a The amount to buy as an integer
+     * @param p The buy price of a single security
+     * @return  <code>true</code>, if the transaction succeeds.
+     *          Otherwise return <code>false</code>.
+     */
     public boolean buy(Integer a, Double p) {
         this.amount += a;
         this.buyData.add(new SimpleEntry<>(p, a));
@@ -85,6 +110,12 @@ public class Security {
         return true;
     }
     
+    /**
+     * Sell securities
+     * @param a The amount to sell as an integer
+     * @return  <code>true</code>, if the transaction succeeds.
+     *          Otherwise return <code>false</code>.
+     */
     public boolean sell(Integer a) {
         if (this.amount >= a) {
             this.amount -= a;

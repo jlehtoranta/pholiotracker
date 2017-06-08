@@ -5,7 +5,11 @@ import java.util.TreeMap;
 import com.jlranta.pholiotracker.api.StockApiHandler;
 import com.jlranta.pholiotracker.api.StockApi;
 
-
+/**
+ * The Portfolio class represents and keeps track of the user's investment
+ * portfolio.
+ * @author Jarkko Lehtoranta <devel@jlranta.com>
+ */
 public class Portfolio {
     private String name;
     private Double cash;
@@ -13,6 +17,11 @@ public class Portfolio {
     private TreeMap<String, Security> securities = new TreeMap<>();
     private TreeMap<String, Double> valueData = new TreeMap<>();
     
+    /**
+     * Creates a new Portfolio
+     * @param name          The name of the portfolio as a string
+     * @param apiHandler    The API handler that handles all the stock APIs
+     */
     public Portfolio(String name, StockApiHandler apiHandler) {
         this.name = name;
         this.apiHandler = apiHandler;
@@ -47,6 +56,14 @@ public class Portfolio {
         return this.securities.get(s);
     }
     
+    /**
+     * Buy more of a single security
+     * @param s The stock symbol of a security
+     * @param p The buy price of a single security
+     * @param a The amount to buy
+     * @return  <code>true</code>, if the transaction succeeds. Otherwise
+     *          return <code>false</code>.
+     */
     public boolean buySecurity(String s, Double p, Integer a) {
         Security sec = this.securities.get(s);
         
@@ -61,6 +78,14 @@ public class Portfolio {
         return false;
     }
     
+    /**
+     * Sell x amount of a single security
+     * @param s The stock symbol of a security
+     * @param p The sell price of a single security
+     * @param a The amount to sell
+     * @return  <code>true</code>, if the transaction succeeds. Otherwise
+     *          return <code>false</code>.
+     */
     public boolean sellSecurity(String s, Double p, Integer a) {
         Security sec = this.securities.get(s);
         
