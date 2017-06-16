@@ -288,6 +288,7 @@ public class PholioGui extends javax.swing.JFrame {
                     Double d = Double.parseDouble(cashVar.getText());
                     if (d >= 0.0) {
                         portfolio.setCash(d);
+                        cashVar.setText(portfolio.getCash().toString());
                     } else {
                         throw new Exception();
                     }
