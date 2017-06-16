@@ -11,8 +11,8 @@ import com.jlranta.pholiotracker.api.StockApi;
  * @author Jarkko Lehtoranta <devel@jlranta.com>
  */
 public class Portfolio {
-    private String name;
-    private Double cash;
+    private String name = "";
+    private Double cash = 0.0;
     private StockApiHandler apiHandler;
     private TreeMap<String, Security> securities = new TreeMap<>();
     private TreeMap<String, Double> valueData = new TreeMap<>();
@@ -30,6 +30,10 @@ public class Portfolio {
     @Override
     public String toString() {
         return this.name;
+    }
+    
+    public void setName(String n) {
+        this.name = n;
     }
     
     public void setSecurities(TreeMap<String, Security> secs) {
@@ -98,5 +102,21 @@ public class Portfolio {
         }
         
         return false;
+    }
+    
+    public Double getChange() {
+        return 1168.56;
+    }
+    
+    public Double getProfitLoss() {
+        return 23.7;
+    }
+    
+    public Double getTotalValue() {
+        return this.getCash() + this.getMarketValue();
+    }
+    
+    public Double getMarketValue() {
+        return 6100.11;
     }
 }

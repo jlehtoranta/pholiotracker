@@ -1,5 +1,7 @@
 package com.jlranta.pholiotracker;
 
+import com.jlranta.pholiotracker.gui.PholioGui;
+import com.jlranta.pholiotracker.portfolio.Portfolio;
 import com.jlranta.pholiotracker.api.AlphaVantageApi;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,6 +11,7 @@ import com.jlranta.pholiotracker.api.StockApi;
 
 
 public class PholioTracker {
+    
      /**
      * @param args the command line arguments
      */
@@ -20,6 +23,8 @@ public class PholioTracker {
         LinkedHashMap<String, Double> data = vantage.getData("GOOGL");
 
         System.out.println(data.toString());
+        
+        Portfolio portfolio = new Portfolio("Sijoitukset", apiHandler);
         
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -47,8 +52,9 @@ public class PholioTracker {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new PholioGui().setVisible(true);
+                new PholioGui(portfolio).setVisible(true);
             }
         });
     }
