@@ -18,3 +18,7 @@ Ohjelma on suunniteltu pääasiassa piensijoittajille.
 ## Luokkakaavio
 ![pholiotracker luokkakaavio](luokkakaavio/pholiotracker_class_diagram.png)
 
+## Sekvenssikaaviot
+![pholiotracker sekvenssikaavio 1](luokkakaavio/pholiotracker_sequence_diagram_1.png)
+![pholiotracker sekvenssikaavio 2](luokkakaavio/pholiotracker_sequence_diagram_2.png)
+
