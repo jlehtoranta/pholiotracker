@@ -7,4 +7,10 @@
 <suppressions>
     <suppress files="PholioTracker.java" checks="[a-zA-Z0-9]*"/>
     <suppress files="PholioGui.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="BuyListener.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="DataDrawer.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="SellListener.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="SellModel.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="StatsListener.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="StatsModel.java" checks="[a-zA-Z0-9]*"/>
 </suppressions>
