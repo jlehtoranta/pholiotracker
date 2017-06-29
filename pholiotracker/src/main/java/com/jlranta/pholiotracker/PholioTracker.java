@@ -2,12 +2,9 @@ package com.jlranta.pholiotracker;
 
 import com.jlranta.pholiotracker.gui.PholioGui;
 import com.jlranta.pholiotracker.portfolio.Portfolio;
-import com.jlranta.pholiotracker.api.AlphaVantageApi;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import com.jlranta.pholiotracker.api.StockApiHandler;
-import com.jlranta.pholiotracker.api.StockApi;
+
+import java.awt.Color;
 
 
 public class PholioTracker {
@@ -17,13 +14,6 @@ public class PholioTracker {
      */
     public static void main(String args[]) {
         StockApiHandler apiHandler = new StockApiHandler();
-        LinkedHashMap<StockApi, ArrayList<String>> r = apiHandler.searchAll("Alphabet");
-        
-        StockApi vantage = new AlphaVantageApi();
-        LinkedHashMap<String, Double> data = vantage.getData("GOOGL");
-
-        System.out.println(data.toString());
-        
         Portfolio portfolio = new Portfolio("Sijoitukset", apiHandler);
         
         /* Set the Nimbus look and feel */
@@ -35,6 +25,7 @@ public class PholioTracker {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.put("control", new Color(192, 192, 200));
                     break;
                 }
             }
@@ -54,7 +45,7 @@ public class PholioTracker {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new PholioGui(portfolio).setVisible(true);
+                new PholioGui(portfolio, apiHandler).setVisible(true);
             }
         });
     }
