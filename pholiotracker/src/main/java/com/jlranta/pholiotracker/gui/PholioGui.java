@@ -1,6 +1,8 @@
 package com.jlranta.pholiotracker.gui;
 
 import com.jlranta.pholiotracker.portfolio.Portfolio;
+import com.jlranta.pholiotracker.api.StockApiHandler;
+import com.jlranta.pholiotracker.api.StockSearchResult;
 
 import java.awt.Color;
 import javax.swing.JComponent;
@@ -16,14 +18,13 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.DefaultListModel;
 import javax.swing.Timer;
-import javax.swing.JSeparator;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import java.awt.Component;
-import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -31,28 +32,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.List;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
 import javax.swing.JOptionPane;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.time.DynamicTimeSeriesCollection;
-import org.jfree.data.time.Second;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 /**
  *
- * @author Jarkko Lehtoranta <devel@jlranta.com>
+ * @author Jarkko Lehtoranta
  */
 public class PholioGui extends javax.swing.JFrame {
     private Portfolio portfolio;
+    private StockApiHandler apiHandler;
     private Timer statsTimer;
     private StatsListener statsListener;
     private Timer graphTimer;
@@ -60,9 +52,12 @@ public class PholioGui extends javax.swing.JFrame {
 
     /**
      * Creates new form MainGui
+     * @param p Portfolio
+     * @param h StockApiHandler
      */
-    public PholioGui(Portfolio p) {
+    public PholioGui(Portfolio p, StockApiHandler h) {
         this.portfolio = p;
+        this.apiHandler = h;
         
         initComponents();
         
@@ -83,33 +78,21 @@ public class PholioGui extends javax.swing.JFrame {
         this.graphTimer.stop();
         this.statsTimer.stop();
         switch(j.getTitleAt(j.getSelectedIndex())) {
-            case "Graph": this.graphTimer.restart(); break;
+            case "Graph": this.dataDrawer.updateAssets(); this.graphTimer.restart(); break;
             case "Stats": this.statsTimer.restart(); break;
             case "Manage": break;
         }
-    }
-    
-    private JFreeChart createChart(final XYDataset dataset) {
-        final JFreeChart result = ChartFactory.createTimeSeriesChart(
-            "Stock price", "Timestamp", "USD", dataset, true, true, false);
-        final XYPlot plot = result.getXYPlot();
-        ValueAxis domain = plot.getDomainAxis();
-        domain.setAutoRange(true);
-        ValueAxis range = plot.getRangeAxis();
-        range.setAutoRange(true);
-        return result;
     }
     
     private JComponent makeGraphPanel() {
         JPanel graph = new JPanel(false);
         JLabel asset = new JLabel("Choose asset:");
         JComboBox assetBox = new JComboBox();
-        assetBox.addItem("Portfolio");
         
-        this.dataDrawer = new DataDrawer(this.portfolio);
-        JFreeChart chart = this.createChart(this.dataDrawer.getData());
+        ChartPanel chartPanel = new ChartPanel(null);
+        this.dataDrawer = new DataDrawer(this.portfolio, assetBox, chartPanel);
+        assetBox.addActionListener(this.dataDrawer);
         
-        //assetBox.setAlignmentX(JComboBox.CENTER_ALIGNMENT);
         graph.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         
@@ -136,9 +119,9 @@ public class PholioGui extends javax.swing.JFrame {
         c.weighty = 1.0;
         c.insets = new Insets(10,10,10,10);
         c.anchor = GridBagConstraints.PAGE_END;
-        graph.add(new ChartPanel(chart), c);
+        graph.add(chartPanel, c);
 
-        this.graphTimer = new Timer(10000, this.dataDrawer);
+        this.graphTimer = new Timer(3600000, this.dataDrawer);
         this.graphTimer.setInitialDelay(0);
         
         return graph;
@@ -164,7 +147,7 @@ public class PholioGui extends javax.swing.JFrame {
         JLabel proloVar = new JLabel("0.0");
         proloVar.setName("PROFIT_LOSS");
 
-        JTable assets = new JTable(new StatsModel()) {
+        JTable assets = new JTable(new StatsModel(this.apiHandler, this.portfolio)) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -250,7 +233,7 @@ public class PholioGui extends javax.swing.JFrame {
         
         List<JLabel> jlist = Arrays.asList(valueVar, cashVar, mvalueVar, changeVar, proloVar);
         this.statsListener = new StatsListener(jlist, (StatsModel) assets.getModel(), this.portfolio);
-        this.statsTimer = new Timer(10000, this.statsListener);
+        this.statsTimer = new Timer(30000, this.statsListener);
         this.statsTimer.setInitialDelay(0);
         
         return stats;
@@ -305,14 +288,19 @@ public class PholioGui extends javax.swing.JFrame {
         
         JLabel buy = new JLabel("Buy Assets:");
         JTextField buySearch = new JTextField("Search...");
+        DefaultListModel searchModel = new DefaultListModel();
         buySearch.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent evt) {
-                buySearch.setText("Search...");
+                if (buySearch.getText().isEmpty()) {
+                    buySearch.setText("Search...");
+                }
             }
             @Override
             public void focusGained(FocusEvent e) {
-                buySearch.setText("");
+                if (buySearch.getText().equals("Search...")) {
+                    buySearch.setText("");
+                }
             }
         });
         buySearch.getDocument().addDocumentListener(new DocumentListener() {
@@ -332,26 +320,53 @@ public class PholioGui extends javax.swing.JFrame {
             public void handle() {
                 if (buySearch.getText().isEmpty()) {
                     return;
+                } else {
+                    ArrayList<StockSearchResult> results = apiHandler.searchStock(buySearch.getText());
+                    searchModel.clear();
+                    for (StockSearchResult result : results) {
+                        searchModel.addElement(result);
+                    }
                 }
             }
         });
         
-        JList buyList = new JList();
+        JList buyList = new JList(searchModel);
         buyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JTextField buyAmount = new JTextField("Amount");
+        buyAmount.addFocusListener(new FocusListener() {
+            @Override
+            public void focusLost(FocusEvent evt) {
+                if (buyAmount.getText().isEmpty()) {
+                    buyAmount.setText("Amount");
+                }
+            }
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (buyAmount.getText().equals("Amount")) {
+                    buyAmount.setText("");
+                }
+            }
+        });
         JTextField buyPrice = new JTextField("Price");
         JTextField buyTime = new JTextField("Time");
         JButton buyButton = new JButton("Buy");
         buyButton.setEnabled(false);
+        SellModel sellModel = new SellModel(this.portfolio);
+        BuyListener buyListener = new BuyListener(this.apiHandler, this.portfolio, sellModel, buyAmount, buyPrice, buyTime, buyButton, cashVar);
+        buyList.addListSelectionListener(buyListener);
+        buyButton.addActionListener(buyListener);
         
         JLabel sell = new JLabel("Sell Assets:");
-        JList sellList = new JList();
-        sellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JTextField sellAmount = new JTextField("Amount");
         JTextField sellPrice = new JTextField("Price");
         JTextField sellTime = new JTextField("Time");
         JButton sellButton = new JButton("Sell");
         sellButton.setEnabled(false);
+        JList sellList = new JList(sellModel);
+        sellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        SellListener sellListener = new SellListener(this.apiHandler, this.portfolio, sellModel, sellAmount, sellPrice, sellTime, sellButton, cashVar);
+        sellList.addListSelectionListener(sellListener);
+        sellButton.addActionListener(sellListener);
         
         manage.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -463,7 +478,6 @@ public class PholioGui extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -478,9 +492,6 @@ public class PholioGui extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -513,7 +524,6 @@ public class PholioGui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JTabbedPane jTabbedPane1;
