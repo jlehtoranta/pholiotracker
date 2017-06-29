@@ -1,57 +1,72 @@
 package com.jlranta.pholiotracker.gui;
 
 import com.jlranta.pholiotracker.portfolio.Portfolio;
+import com.jlranta.pholiotracker.portfolio.Security;
 
+import java.util.LinkedHashMap;
+import java.util.Date;
+import java.util.Map;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import org.jfree.data.time.DynamicTimeSeriesCollection;
-import org.jfree.data.time.Second;
-import org.jfree.data.xy.XYDataset;
+import javax.swing.JComboBox;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYDataset;
 
 /**
  *
- * @author Jarkko Lehtoranta <devel@jlranta.com>
+ * @author Jarkko Lehtoranta
  */
 public class DataDrawer implements ActionListener {
-    private DynamicTimeSeriesCollection data;
+    private LinkedHashMap<Date, Double> data;
     private Portfolio portfolio;
+    private JComboBox assetBox;
+    private ChartPanel chartPanel;
+    private String source;
     
-    public DataDrawer(Portfolio p) {
+    public DataDrawer(Portfolio p, JComboBox assets, ChartPanel chartPanel) {
         this.portfolio = p;
+        this.assetBox = assets;
+        this.chartPanel = chartPanel;
+        this.source = this.portfolio.toString();
+        this.updateAssets();
+        this.chartPanel.setChart(this.createChart(this.getData()));
+    }
+    
+    public void updateAssets() {
+        this.assetBox.removeAllItems();
+        this.assetBox.addItem(this.portfolio.toString());
+        for (Map.Entry<String, Security> sec : this.portfolio.getSecurities().entrySet()) {
+            this.assetBox.addItem(sec.getValue().getDescription());
+        }
     }
     
     public void setDataSource(String s) {
-        if (s.equals(this.portfolio.toString())) {
-            //this.data = this.portfolio.getValues();
-        } else {
-            //this.data = this.portfolio.getSecurity(s).getValues();
-        }
+        this.source = s;
     }
     
     public TimeSeriesCollection getData() {
         final TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.setDomainIsPointsInTime(true);
         
-        final TimeSeries s1 = new TimeSeries("Portfolio", Day.class);
-        s1.add(new Day(1, 6, 2017), 5888.2);
-        s1.add(new Day(2, 6, 2017), 5902.1);
-        s1.add(new Day(3, 6, 2017), 6000.55);
-        s1.add(new Day(4, 6, 2017), 6030.11);
-        s1.add(new Day(5, 6, 2017), 6002.15);
-        s1.add(new Day(6, 6, 2017), 6004.20);
-        s1.add(new Day(7, 6, 2017), 6040.18);
-        s1.add(new Day(8, 6, 2017), 6080.88);
-        s1.add(new Day(9, 6, 2017), 6075.43);
-        s1.add(new Day(10, 6, 2017), 6098.77);
-        s1.add(new Day(11, 6, 2017), 6024.99);
-        s1.add(new Day(12, 6, 2017), 6036.11);
-        s1.add(new Day(13, 6, 2017), 6066.9);
-        s1.add(new Day(14, 6, 2017), 6089.32);
-        s1.add(new Day(15, 6, 2017), 6090.7);
-        s1.add(new Day(16, 6, 2017), 6100.11);
+        TimeSeries s1 = new TimeSeries(this.source);
+        
+        if (this.source.equals(this.portfolio.toString())) {
+            this.data = this.portfolio.getValues();
+        } else if (this.portfolio.getSecurity(this.source) != null) {
+            this.data = this.portfolio.getSecurity(this.source).getValues();
+        }
+        
+        if (this.data != null) {
+            for (Map.Entry<Date, Double> e : this.data.entrySet()) {
+                s1.add(new Day(e.getKey()), e.getValue());
+            }
+        }
         
         dataset.addSeries(s1);
 
@@ -60,6 +75,22 @@ public class DataDrawer implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        
+        if (e.getSource() == this.assetBox) {
+            if (this.assetBox.getSelectedIndex() != -1) {
+                this.setDataSource((String) this.assetBox.getSelectedItem());
+            }
+        }
+        this.chartPanel.setChart(this.createChart(this.getData()));
+    }
+    
+    private JFreeChart createChart(final XYDataset dataset) {
+        final JFreeChart result = ChartFactory.createTimeSeriesChart(
+            "Stock price", "Timestamp", "USD", dataset, true, true, false);
+        final XYPlot plot = result.getXYPlot();
+        ValueAxis domain = plot.getDomainAxis();
+        domain.setAutoRange(true);
+        ValueAxis range = plot.getRangeAxis();
+        range.setAutoRange(true);
+        return result;
     }
 }
