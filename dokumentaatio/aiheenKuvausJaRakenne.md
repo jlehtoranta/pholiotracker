@@ -15,6 +15,21 @@ Ohjelma on suunniteltu pääasiassa piensijoittajille.
 * Osakkeiden poistaminen salkusta
 * Salkun kokonaisarvon kehityksen tarkastelu
 
+## Rakennekuvaus
+Ohjelma jakautuu yhteensä neljään eri pakettiin:
+* pholiotracker
+  * Tässä paketissa sijaitsee pääohjelma, joka luo ohjelman käynnistyksessä
+    tarvitsemat Portfolio ja StockApiHandler oliot, sekä käynnistää
+    varsinaisen käyttöliittymän.
+* pholiotracker.api
+  * API-pakettiin on koottu kaikki osakedatan hakuun liittyvät
+    toiminnallisuudet.
+* pholiotracker.gui
+  * GUI-paketti sisältää kaikki käyttöliittymän toiminnallisuudet.
+* pholiotracker.portfolio
+  * Portfolio-paketti sisältää ohjelman toimintalogiikan. Sen avulla
+    hallinnoidaan osakesalkkua ja sen sisältämiä osakkeita.
+
 ## Luokkakaavio
 ![pholiotracker luokkakaavio](luokkakaavio/pholiotracker_class_diagram.png)
 
