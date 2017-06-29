@@ -1,18 +1,28 @@
 package com.jlranta.pholiotracker.gui;
 
+import com.jlranta.pholiotracker.portfolio.Portfolio;
+import com.jlranta.pholiotracker.portfolio.Security;
+import com.jlranta.pholiotracker.api.StockApiHandler;
+
+import java.util.TreeMap;
+import java.util.Map;
+import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 /**
  *
- * @author Jarkko Lehtoranta <devel@jlranta.com>
+ * @author Jarkko Lehtoranta
  */
 public class StatsModel extends AbstractTableModel {
+    private Portfolio portfolio;
+    private StockApiHandler apiHandler;
     private String[] columnNames = {"Name", "Price", "Acquisition price", "Profit/Loss", "%", "Amount", "Value"};
-    private Object[][] data = {{"Alphabet Inc", "967.93", "651.20", "633.46", "48.6 %", "2", "1935.86"},
-                                {"Apple Inc", "145.16", "92.60", "525.60", "56.8 %", "10", "1451.60"},
-                                {"Coca-Cola Co", "45.25", "42.00", "65.00", "7.7 %", "20", "905.00"},
-                                {"Harley-Davidson Inc", "54.89", "59.23", "-65.10", "-7.3 %", "15", "823.35"},
-                                {"Pfizer Inc", "32.81", "34.66", "-55.50", "-5.3 %", "30", "984.30"}};
+    private ArrayList<ArrayList<String>> data = new ArrayList<>();
+    
+    public StatsModel(StockApiHandler a, Portfolio p) {
+        this.apiHandler = a;
+        this.portfolio = p;
+    }
     
     @Override
     public int getColumnCount() {
@@ -26,16 +36,31 @@ public class StatsModel extends AbstractTableModel {
     
     @Override
     public int getRowCount() {
-        return this.data.length;
+        return this.data.size();
     }
     
     @Override
     public Object getValueAt(int r, int c) {
-        return data[r][c];
+        return this.data.get(r).get(c);
     }
     
     public void updateData() {
-
+        TreeMap<String, Security> secs = this.portfolio.getSecurities();
+        this.data.clear();
+        
+        for (Map.Entry<String, Security> sec : secs.entrySet()) {
+            sec.getValue().updateCurrentPrice();
+            ArrayList<String> l = new ArrayList<>();
+            l.add(sec.getKey());
+            l.add(sec.getValue().getCurrentPrice().toString());
+            l.add(String.format("%.2f", sec.getValue().getBuyPrice()));
+            l.add(String.format("%.2f", sec.getValue().getProfit()));
+            l.add(String.format("%.1f", sec.getValue().getProfitPercentage()));
+            l.add(sec.getValue().getAmount().toString());
+            l.add(String.format("%.2f", sec.getValue().getAmount() * sec.getValue().getBuyPrice()));
+            this.data.add(l);
+        }
+        
     }
     
 }
