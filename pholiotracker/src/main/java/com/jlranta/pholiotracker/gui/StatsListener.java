@@ -1,8 +1,8 @@
 package com.jlranta.pholiotracker.gui;
 
 import com.jlranta.pholiotracker.portfolio.Portfolio;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author Jarkko Lehtoranta <devel@jlranta.com>
+ * @author Jarkko Lehtoranta
  */
 public class StatsListener implements ActionListener {
     private Portfolio portfolio;
@@ -28,18 +28,18 @@ public class StatsListener implements ActionListener {
         for (JLabel l : this.labels) {
             Double d = 0.0;
             switch(l.getName()) {
-                case "TOTAL_VALUE": l.setText(this.portfolio.getTotalValue().toString()); break;
-                case "MARKET_VALUE": l.setText(this.portfolio.getMarketValue().toString()); break;
-                case "CASH": l.setText(this.portfolio.getCash().toString()); break;
+                case "TOTAL_VALUE": l.setText(String.format("%.2f", this.portfolio.getTotalValue())); break;
+                case "MARKET_VALUE": l.setText(String.format("%.2f", this.portfolio.getMarketValue())); break;
+                case "CASH": l.setText(String.format("%.2f", this.portfolio.getCash())); break;
                 case "CHANGE":
                     d = portfolio.getChange();
                     l.setForeground(this.getForegroundColor(d));
-                    l.setText(d.toString());
+                    l.setText(String.format("%.2f", d));
                     break;
                 case "PROFIT_LOSS":
                     d = portfolio.getProfitLoss();
                     l.setForeground(this.getForegroundColor(d));
-                    l.setText(d.toString() + " %");
+                    l.setText(String.format("%.1f", d) + " %");
                     break;
             }
         }
